@@ -142,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        Intent intent = new Intent(MainActivity.this,GraphDetailsActivity.class);
+                        intent.putExtra("coinid",coins.get(position).getId());
+                        startActivity(intent);
                     }
                 });
 
