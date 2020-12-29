@@ -13,6 +13,9 @@ import com.google.gson.Gson;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
+import org.achartengine.chart.BarChart;
+import org.achartengine.chart.CombinedXYChart;
+import org.achartengine.chart.LineChart;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
@@ -29,7 +32,7 @@ public class GraphDetailsActivity extends AppCompatActivity {
     TextView textView;
     LinearLayout chartLyt;
     private Coin coin;
-    int number_of_days = 14;
+    private static final int number_of_days = 15;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,37 +64,59 @@ public class GraphDetailsActivity extends AppCompatActivity {
     }
 
     public void renderGraph(CoinChartData coinChartData) {
-        XYSeries priceSeries = new XYSeries("Price");
-        XYSeries volumeSeries = new XYSeries("Volume");
+        XYSeries priceSeries = new XYSeries("Price",0);
+        XYSeries volumeSeries = new XYSeries("Volume",1);
 
-        for (int i = 0; i < number_of_days ; i++) {
+
+
+
+        for (int i = 1; i < number_of_days ; i++) {
             priceSeries.add(i + 1, Double.parseDouble(coinChartData.getPrices().get(i).get(1)));
-            volumeSeries.add(i + 1, Double.parseDouble(coinChartData.getTotalVolumes().get(i).get(1)));
+            volumeSeries.add(i + 1, Double.parseDouble(coinChartData.getTotalVolumes().get(i).get(1))/10000000);
         }
 
-        XYSeriesRenderer renderer = new XYSeriesRenderer();
-        renderer.setLineWidth(2);
-        renderer.setColor(Color.RED);
-        renderer.setDisplayBoundingPoints(true);
-        renderer.setPointStyle(PointStyle.CIRCLE);
-        renderer.setPointStrokeWidth(12);
-        renderer.setLineWidth(6f);
-        renderer.setShowLegendItem(false);
+        XYSeriesRenderer lineRenderer = new XYSeriesRenderer();
+
+        lineRenderer.setColor(Color.RED);
+        lineRenderer.setDisplayBoundingPoints(true);
+        lineRenderer.setPointStyle(PointStyle.CIRCLE);
+        lineRenderer.setPointStrokeWidth(12);
+        lineRenderer.setLineWidth(6f);
+        lineRenderer.setShowLegendItem(false);
+
+        XYSeriesRenderer barRenderer = new XYSeriesRenderer();
+        barRenderer.setColor(R.color.colorPrimaryDark);
+        barRenderer.setDisplayBoundingPoints(true);
+        barRenderer.setPointStyle(PointStyle.CIRCLE);
+        barRenderer.setPointStrokeWidth(1);
+        barRenderer.setLineWidth(1f);
+        barRenderer.setShowLegendItem(false);
+
         XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
         dataset.addSeries(priceSeries);
+        dataset.addSeries(volumeSeries);
 
-        XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
-        mRenderer.addSeriesRenderer(renderer);
+        XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer(2);
+        mRenderer.addSeriesRenderer(lineRenderer);
+        mRenderer.addSeriesRenderer(barRenderer);
         mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent margins
         mRenderer.setLabelsTextSize(35);
+        mRenderer.setYLabels(10);
+        mRenderer.setXLabels(number_of_days);
         mRenderer.setLabelsColor(android.R.color.transparent);
+        mRenderer.setBarSpacing(1);
+
+        mRenderer.setYAxisAlign(Paint.Align.LEFT,0);
+        mRenderer.setYAxisAlign(Paint.Align.RIGHT,1);
         mRenderer.setYLabelsAlign(Paint.Align.LEFT);
+        mRenderer.setYLabelsPadding(1);
         mRenderer.setPanEnabled(false, false);
         mRenderer.setDisplayValues(true);
-        mRenderer.setYAxisMin(0);
         mRenderer.setShowGrid(true);
 
-        GraphicalView chartView = ChartFactory.getLineChartView(this, dataset, mRenderer);
+        CombinedXYChart.XYCombinedChartDef[] types = new CombinedXYChart.XYCombinedChartDef[] { new CombinedXYChart.XYCombinedChartDef(LineChart.TYPE, 0), new CombinedXYChart.XYCombinedChartDef(BarChart.TYPE, 1) };
+
+        GraphicalView chartView = ChartFactory.getCombinedXYChartView(this,dataset,mRenderer,types);
 
         chartLyt.addView(chartView,0);
     }
