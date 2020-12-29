@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/column_names_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/ColumnTextView"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:text="@string/column_number"/>
+
+        <TextView
+            style="@style/ColumnTextView"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text=""/>
+
+        <TextView
+            style="@style/ColumnTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/column_name"/>
+
+        <TextView
+            style="@style/ColumnTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/column_price"/>
+
+        <TextView
+            style="@style/ColumnTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/column_24change"/>
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/top10_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/coin_list_item"
+       />
+
+</LinearLayout>
