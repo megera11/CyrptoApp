@@ -143,7 +143,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this,GraphDetailsActivity.class);
-                        intent.putExtra("coinid",coins.get(position).getId());
+                        Gson gson = new Gson();
+                        String myjson = gson.toJson(coins.get(position));
+                        intent.putExtra("coinid",myjson);
                         startActivity(intent);
                     }
                 });
