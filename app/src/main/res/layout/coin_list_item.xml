@@ -1,44 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
-    android:padding="5dp">
+    card_view:cardElevation="3dp"
+    card_view:cardUseCompatPadding="true"
+    android:padding="2dp">
 
-    <TextView
-        style="@style/ListItemTextView"
-        android:id="@+id/text_list_number"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/colorAccentLight">
 
-    <ImageView
-        android:id="@+id/img_list_coin"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_vertical"
-        android:padding="5dp"
-        />
+        <TextView
+            android:id="@+id/text_list_number"
+            style="@style/ListItemTextView"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        style="@style/ListItemTextView"
-        android:id="@+id/text_list_coin_name"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        />
+        <ImageView
+            android:id="@+id/img_list_coin"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:padding="5dp" />
 
-    <TextView
-        style="@style/ListItemTextView"
-        android:id="@+id/text_list_coin_price"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        />
+        <TextView
+            android:id="@+id/text_list_coin_name"
+            style="@style/ListItemTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        style="@style/ListItemTextView"
-        android:id="@+id/text_list_coin_change"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        />
+        <TextView
+            android:id="@+id/text_list_coin_price"
+            style="@style/ListItemTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/text_list_coin_change"
+            style="@style/ListItemTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>
