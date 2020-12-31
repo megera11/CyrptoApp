@@ -32,6 +32,13 @@
         <item name="android:textColor">@color/dimTextColor</item>
     </style>
 
+    <style name="DetailsTextView">
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">22dp</item>
+        <item name="android:textColor">@color/dimTextColor</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
     <style name="horizontalDivider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>

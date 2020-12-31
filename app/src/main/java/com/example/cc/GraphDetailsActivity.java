@@ -39,7 +39,7 @@ public class GraphDetailsActivity extends AppCompatActivity {
     TextView updateTextView;
     LinearLayout chartLyt;
     private Coin coin;
-    private static final int number_of_days = 15;
+    private static final int number_of_days = 7;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +58,7 @@ public class GraphDetailsActivity extends AppCompatActivity {
         highTextView = findViewById(R.id.text_details_high24);
         lowTextView = findViewById(R.id.text_details_low24);
         imageView = findViewById(R.id.img_details_coin);
-        updateTextView = findViewById(R.id.text_details_updatedDate);
+        //updateTextView = findViewById(R.id.text_details_updatedDate);
         chartLyt = findViewById(R.id.chart);
 
         Picasso.with(this)
@@ -70,7 +70,7 @@ public class GraphDetailsActivity extends AppCompatActivity {
 
 
         CoinService coinService = RetrofitInstance.getRetrofitInstance().create(CoinService.class);
-        Call<CoinChartData> coinApiCall = coinService.getCoinChartData(coin.getId(), "usd", number_of_days, "daily");
+        Call<CoinChartData> coinApiCall = coinService.getCoinChartData(coin.getId(), "usd", number_of_days, "hourly");
         coinApiCall.enqueue(new Callback<CoinChartData>() {
             @Override
             public void onResponse(Call<CoinChartData> call, Response<CoinChartData> response) {
@@ -89,7 +89,7 @@ public class GraphDetailsActivity extends AppCompatActivity {
         volumeTextView.setText(coin.getTotalVolume());
         highTextView.setText("$"+coin.getHigh24h());
         lowTextView.setText("$"+coin.getLow24h());
-        updateTextView.setText(coin.getLastUpdated());
+       // updateTextView.setText(coin.getLastUpdated());
 
     }
 
@@ -100,9 +100,10 @@ public class GraphDetailsActivity extends AppCompatActivity {
 
 
 
-        for (int i = 1; i < number_of_days ; i++) {
+        for (int i = 0; i < number_of_days*24 ; i=i+2 ) {
             priceSeries.add(i + 1, Double.parseDouble(coinChartData.getPrices().get(i).get(1)));
-            volumeSeries.add(i + 1, Double.parseDouble(coinChartData.getTotalVolumes().get(i).get(1))/10000000);
+
+            volumeSeries.add(i + 1, Double.parseDouble( coinChartData.getTotalVolumes().get(i).get(1).substring(0,5)));
         }
 
         XYSeriesRenderer lineRenderer = new XYSeriesRenderer();
@@ -110,14 +111,13 @@ public class GraphDetailsActivity extends AppCompatActivity {
         lineRenderer.setColor(Color.RED);
         lineRenderer.setDisplayBoundingPoints(true);
         lineRenderer.setPointStyle(PointStyle.CIRCLE);
-        lineRenderer.setPointStrokeWidth(12);
+        lineRenderer.setPointStrokeWidth(0);
         lineRenderer.setLineWidth(6f);
         lineRenderer.setShowLegendItem(false);
 
         XYSeriesRenderer barRenderer = new XYSeriesRenderer();
         barRenderer.setColor(R.color.colorPrimaryDark);
         barRenderer.setDisplayBoundingPoints(true);
-        barRenderer.setPointStyle(PointStyle.CIRCLE);
         barRenderer.setPointStrokeWidth(1);
         barRenderer.setLineWidth(1f);
         barRenderer.setShowLegendItem(false);
@@ -131,19 +131,25 @@ public class GraphDetailsActivity extends AppCompatActivity {
         mRenderer.addSeriesRenderer(barRenderer);
         mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent margins
         mRenderer.setLabelsTextSize(35);
-        mRenderer.setYLabels(10);
+        mRenderer.setYLabels(8);
+
         mRenderer.setXLabels(number_of_days);
         mRenderer.setLabelsColor(android.R.color.transparent);
-        mRenderer.setBarSpacing(1);
+        mRenderer.setBarSpacing(1.2);
 
         mRenderer.setYAxisAlign(Paint.Align.LEFT,0);
         mRenderer.setYAxisAlign(Paint.Align.RIGHT,1);
-        mRenderer.setYLabelsAlign(Paint.Align.LEFT);
+        mRenderer.setYLabelsAlign(Paint.Align.LEFT,0);
+        mRenderer.setYLabelsAlign(Paint.Align.LEFT,1);
+
 
         mRenderer.setYLabelsPadding(1);
         mRenderer.setPanEnabled(false, false);
         mRenderer.setDisplayValues(true);
         mRenderer.setShowGrid(true);
+        mRenderer.setShowLegend(false);
+
+
 
         CombinedXYChart.XYCombinedChartDef[] types = new CombinedXYChart.XYCombinedChartDef[] { new CombinedXYChart.XYCombinedChartDef(LineChart.TYPE, 0), new CombinedXYChart.XYCombinedChartDef(BarChart.TYPE, 1) };
 
