@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -22,27 +25,48 @@ import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class GraphDetailsActivity extends AppCompatActivity {
-    TextView textView;
+    ImageView imageView;
+    TextView nameTextView;
+    TextView priceTextView;
+    TextView volumeTextView;
+    TextView highTextView;
+    TextView lowTextView;
+    TextView updateTextView;
     LinearLayout chartLyt;
     private Coin coin;
     private static final int number_of_days = 15;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_graph_details2);
+
         Intent intent = getIntent();
         Gson gson = new Gson();
         coin = gson.fromJson(intent.getStringExtra("coinid"),Coin.class);
-        textView = findViewById(R.id.cosss);
+
+        nameTextView = findViewById(R.id.details_title);
+        priceTextView = findViewById(R.id.text_details_price);
+        volumeTextView = findViewById(R.id.text_details_totalvolume);
+        highTextView = findViewById(R.id.text_details_high24);
+        lowTextView = findViewById(R.id.text_details_low24);
+        imageView = findViewById(R.id.img_details_coin);
+        updateTextView = findViewById(R.id.text_details_updatedDate);
         chartLyt = findViewById(R.id.chart);
-        textView.setText(coin.getName());
+
+        Picasso.with(this)
+                .load(coin.getImage())
+                .placeholder(R.drawable.ic_list_placeholder_image).into(imageView);
+
+
+
 
 
         CoinService coinService = RetrofitInstance.getRetrofitInstance().create(CoinService.class);
@@ -60,6 +84,12 @@ public class GraphDetailsActivity extends AppCompatActivity {
             }
         });
 
+        nameTextView.setText(coin.getName());
+        priceTextView.setText("$"+coin.getCurrentPrice());
+        volumeTextView.setText(coin.getTotalVolume());
+        highTextView.setText("$"+coin.getHigh24h());
+        lowTextView.setText("$"+coin.getLow24h());
+        updateTextView.setText(coin.getLastUpdated());
 
     }
 
@@ -109,6 +139,7 @@ public class GraphDetailsActivity extends AppCompatActivity {
         mRenderer.setYAxisAlign(Paint.Align.LEFT,0);
         mRenderer.setYAxisAlign(Paint.Align.RIGHT,1);
         mRenderer.setYLabelsAlign(Paint.Align.LEFT);
+
         mRenderer.setYLabelsPadding(1);
         mRenderer.setPanEnabled(false, false);
         mRenderer.setDisplayValues(true);

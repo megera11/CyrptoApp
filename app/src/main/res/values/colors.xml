@@ -7,6 +7,7 @@
     <color name="colorAccent">#161d30</color>
     <color name="colorBackground">#1c263f</color>
     <color name="colorAccentLight">#232e4f</color>
+    <color name="dimTextColor">#869bcf</color>
     <color name="downRed">#FF2800</color>
     <color name="upGreen">#00B000</color>
 </resources>

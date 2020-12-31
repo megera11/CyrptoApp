@@ -9,39 +9,30 @@
 
     <LinearLayout
         android:id="@+id/column_names_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
             style="@style/ColumnTextView"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/column_number"/>
 
-        <TextView
-            style="@style/ColumnTextView"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text=""/>
 
         <TextView
             style="@style/ColumnTextView"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
             android:text="@string/column_name"/>
 
         <TextView
             style="@style/ColumnTextView"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/column_price"/>
 
-        <TextView
-            style="@style/ColumnTextView"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="@string/column_24change"/>
+
     </LinearLayout>
 
 

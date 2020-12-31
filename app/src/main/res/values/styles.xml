@@ -13,15 +13,36 @@
         <item name="android:gravity">center</item>
         <item name="android:padding">20dp</item>
         <item name="android:textSize">20dp</item>
-        <item name="android:textColor">#869bcf</item>
+        <item name="android:textColor">@color/dimTextColor</item>
 
     </style>
 
     <style name="ListItemTextView" >
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/dimTextColor</item>
+    </style>
+
+
+    <style name="ListPriceTextView" >
+        <item name="android:gravity">center_vertical</item>
         <item name="android:padding">5dp</item>
         <item name="android:textSize">18dp</item>
-        <item name="android:textColor">#869bcf</item>
+        <item name="android:textColor">@color/dimTextColor</item>
+    </style>
+
+    <style name="horizontalDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+
+    <style name="verticalDivider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">?android:attr/listDivider</item>
     </style>
 
 </resources>

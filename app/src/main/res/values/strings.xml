@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">CC</string>
     <string name="column_price">Price</string>
-    <string name="column_name">Name</string>
-    <string name="column_24change">24h</string>
+    <string name="column_name">Coin</string>
+    <string name="column_24change"></string>
     <string name="column_number">#</string>
     <string name="refresh">Refresh</string>
     <string name="no_internet">No internet access</string>
