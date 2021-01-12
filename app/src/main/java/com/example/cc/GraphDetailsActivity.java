@@ -100,10 +100,10 @@ public class GraphDetailsActivity extends AppCompatActivity {
 
 
 
-        for (int i = 0; i < number_of_days*24 ; i=i+2 ) {
-            priceSeries.add(i + 1, Double.parseDouble(coinChartData.getPrices().get(i).get(1)));
+        for (int i = 0; i < coinChartData.getPrices().size(); i=i+2 ) {
+            priceSeries.add(i+1 , Double.parseDouble(coinChartData.getPrices().get(i).get(1)));
 
-            volumeSeries.add(i + 1, Double.parseDouble( coinChartData.getTotalVolumes().get(i).get(1).substring(0,5)));
+            volumeSeries.add(i +1, Double.parseDouble( coinChartData.getTotalVolumes().get(i).get(1).substring(0,5)));
         }
 
         XYSeriesRenderer lineRenderer = new XYSeriesRenderer();
