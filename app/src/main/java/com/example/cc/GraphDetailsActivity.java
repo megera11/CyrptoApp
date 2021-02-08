@@ -46,7 +46,7 @@ public class GraphDetailsActivity extends AppCompatActivity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_graph_details2);
+        setContentView(R.layout.activity_graph_display);
 
         Intent intent = getIntent();
         Gson gson = new Gson();
@@ -89,7 +89,7 @@ public class GraphDetailsActivity extends AppCompatActivity {
         volumeTextView.setText(coin.getTotalVolume());
         highTextView.setText("$"+coin.getHigh24h());
         lowTextView.setText("$"+coin.getLow24h());
-       // updateTextView.setText(coin.getLastUpdated());
+
 
     }
 

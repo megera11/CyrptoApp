@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".GraphDetailsActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/img_details_coin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center|right"
+                android:padding="5dp" />
+
+
+            <TextView
+                android:id="@+id/details_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:textColor="@color/dimTextColor"
+                android:textSize="35dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:padding="10dp" />
+
+
+        <View style="@style/horizontalDivider" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/price_label"
+                style="@style/DetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:textSize="18dp"
+                android:textColor="@color/dimTextColor2"
+                android:text="@string/price_label" />
+
+            <TextView
+                android:id="@+id/text_details_price"
+                style="@style/DetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/price_label" />
+
+
+            <TextView
+                android:id="@+id/volume_label"
+                style="@style/DetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/anchor"
+                android:textSize="18dp"
+                android:textColor="@color/dimTextColor2"
+                android:text="@string/volume_label" />
+
+            <TextView
+                android:id="@+id/text_details_totalvolume"
+                style="@style/DetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/volume_label"
+                android:layout_alignLeft="@id/anchor" />
+
+            <View
+                android:id="@+id/anchor"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true" />
+
+            <View
+                style="@style/verticalDivider"
+                android:layout_centerInParent="true" />
+
+            <View
+                style="@style/horizontalDivider"
+                android:layout_below="@+id/text_details_totalvolume" />
+
+            <TextView
+                android:id="@+id/high24_label"
+                style="@style/DetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_details_price"
+                android:textSize="18dp"
+                android:textColor="@color/dimTextColor2"
+                android:text="@string/high_label" />
+
+            <TextView
+                android:id="@+id/text_details_high24"
+                style="@style/DetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/high24_label" />
+
+            <TextView
+                android:id="@+id/low24_label"
+                style="@style/DetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_details_totalvolume"
+                android:layout_alignLeft="@id/anchor"
+                android:textSize="18dp"
+                android:textColor="@color/dimTextColor2"
+                android:text="@string/low_label" />
+
+            <TextView
+                android:id="@+id/text_details_low24"
+                style="@style/DetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/low24_label"
+                android:layout_alignLeft="@id/anchor" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Random;
 
@@ -67,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<List<Coin>> call, Throwable t) {
-                    t.printStackTrace();
-
+                    if(t instanceof SocketTimeoutException){
+                        Toast toast = Toast.makeText(getApplicationContext(), "Connection timeout. Please try again", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
                 }
             });
         }

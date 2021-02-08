@@ -6,4 +6,8 @@
     <string name="column_number">#</string>
     <string name="refresh">Refresh</string>
     <string name="no_internet">No internet access</string>
+    <string name="price_label">Price:</string>
+    <string name="volume_label">Volume:</string>
+    <string name="high_label">24H High:</string>
+    <string name="low_label">24H Low:</string>
 </resources>
