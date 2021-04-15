@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,14 +38,38 @@
                 android:textSize="35dp" />
         </LinearLayout>
 
+
         <LinearLayout
-            android:id="@+id/chart"
+            android:id="@+id/price_chart"
             android:layout_width="match_parent"
             android:layout_height="500dp"
-            android:layout_margin="10dp"
-            android:orientation="vertical"
-            android:padding="10dp" />
+            android:orientation="vertical" >
 
+            <ProgressBar
+                android:layout_weight="1"
+                android:id="@+id/progressBar_cyclic"
+
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:indeterminate="true"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/volume_chart"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:orientation="vertical" />
+        
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:tabMode="fixed"
+            />
 
         <View style="@style/horizontalDivider" />
 
@@ -59,9 +84,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:textSize="18dp"
+                android:text="@string/price_label"
                 android:textColor="@color/dimTextColor2"
-                android:text="@string/price_label" />
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/text_details_price"
@@ -77,9 +102,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/anchor"
-                android:textSize="18dp"
+                android:text="@string/volume_label"
                 android:textColor="@color/dimTextColor2"
-                android:text="@string/volume_label" />
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/text_details_totalvolume"
@@ -109,9 +134,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_details_price"
-                android:textSize="18dp"
+                android:text="@string/high_label"
                 android:textColor="@color/dimTextColor2"
-                android:text="@string/high_label" />
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/text_details_high24"
@@ -127,9 +152,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_details_totalvolume"
                 android:layout_alignLeft="@id/anchor"
-                android:textSize="18dp"
+                android:text="@string/low_label"
                 android:textColor="@color/dimTextColor2"
-                android:text="@string/low_label" />
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/text_details_low24"

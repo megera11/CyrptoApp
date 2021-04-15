@@ -5,13 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -28,18 +25,19 @@ import com.squareup.picasso.Picasso;
 
 import java.net.SocketTimeoutException;
 import java.util.List;
-import java.util.Random;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        swipeRefreshLayout = findViewById(R.id.swipe_view_list);
+        swipeRefreshLayout.setOnRefreshListener(this);
         fetchData();
     }
 
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Call<List<Coin>> call, Response<List<Coin>> response) {
 
                     setupCoinListView(response.body());
-
+                    swipeRefreshLayout.setRefreshing(false);
                 }
 
                 @Override
@@ -71,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     if(t instanceof SocketTimeoutException){
                         Toast toast = Toast.makeText(getApplicationContext(), "Connection timeout. Please try again", Toast.LENGTH_LONG);
                         toast.show();
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 }
             });
@@ -87,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.setBooks(coins);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchData();
     }
 
     private class CoinHolder extends RecyclerView.ViewHolder {
@@ -131,63 +135,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class CoinAdapter extends RecyclerView.Adapter<CoinHolder> implements SensorEventListener{
+    private class CoinAdapter extends RecyclerView.Adapter<CoinHolder> {
         private List<Coin> coins;
-        Random random = new Random();
-
-        private float mLastX, mLastY, mLastZ;
-        private boolean mInitialized;
-        private SensorManager mSensorManager;
-        private Sensor mAccelerometer;
-        private final float NOISE = (float) 8.0;
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
-            if (!mInitialized) {
-                mLastX = x;
-                mLastY = y;
-                mLastZ = z;
-                mInitialized = true;
-            } else {
-                float deltaX = Math.abs(mLastX - x);
-                float deltaY = Math.abs(mLastY - y);
-                float deltaZ = Math.abs(mLastZ - z);
-                if (deltaX < NOISE) deltaX = (float)0.0;
-                if (deltaY < NOISE) deltaY = (float)0.0;
-                if (deltaZ < NOISE) deltaZ = (float)0.0;
-                mLastX = x;
-                mLastY = y;
-                mLastZ = z;
-                if (deltaY > deltaX) {
-                    Intent intent = new Intent(MainActivity.this,GraphDetailsActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    Gson gson = new Gson();
-                    String myjson = gson.toJson(coins.get(random.nextInt(29)));
-                    intent.putExtra("coinid",myjson);
-                    startActivity(intent);
-                }
-            }
-        }
-
-
 
         @NonNull
         @Override
         public CoinHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-
-            mInitialized = false;
-            mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            mSensorManager.registerListener(this, mAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
 
             return new CoinHolder(getLayoutInflater(), parent);
         }
@@ -231,6 +185,5 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
 }

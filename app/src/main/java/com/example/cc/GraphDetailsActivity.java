@@ -1,24 +1,28 @@
 package com.example.cc;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart;
-import org.achartengine.chart.CombinedXYChart;
-import org.achartengine.chart.LineChart;
+
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
@@ -29,17 +33,21 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GraphDetailsActivity extends AppCompatActivity {
+public class GraphDetailsActivity extends AppCompatActivity{
     ImageView imageView;
     TextView nameTextView;
     TextView priceTextView;
     TextView volumeTextView;
     TextView highTextView;
     TextView lowTextView;
-    TextView updateTextView;
-    LinearLayout chartLyt;
+    LinearLayout priceChart;
+    LinearLayout volumeChart;
+    TabLayout tabLayout;
+    ProgressBar progressBar_cyclic;
     private Coin coin;
-    private static final int number_of_days = 7;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,31 +66,13 @@ public class GraphDetailsActivity extends AppCompatActivity {
         highTextView = findViewById(R.id.text_details_high24);
         lowTextView = findViewById(R.id.text_details_low24);
         imageView = findViewById(R.id.img_details_coin);
-        //updateTextView = findViewById(R.id.text_details_updatedDate);
-        chartLyt = findViewById(R.id.chart);
-
-        Picasso.with(this)
-                .load(coin.getImage())
-                .placeholder(R.drawable.ic_list_placeholder_image).into(imageView);
+        priceChart = findViewById(R.id.price_chart);
+        volumeChart = findViewById(R.id.volume_chart);
+        tabLayout = findViewById(R.id.tab_layout);
+        progressBar_cyclic = findViewById(R.id.progressBar_cyclic);
 
 
-
-
-
-        CoinService coinService = RetrofitInstance.getRetrofitInstance().create(CoinService.class);
-        Call<CoinChartData> coinApiCall = coinService.getCoinChartData(coin.getId(), "usd", number_of_days, "hourly");
-        coinApiCall.enqueue(new Callback<CoinChartData>() {
-            @Override
-            public void onResponse(Call<CoinChartData> call, Response<CoinChartData> response) {
-                renderGraph(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<CoinChartData> call, Throwable t) {
-                t.printStackTrace();
-
-            }
-        });
+        Picasso.with(this).load(coin.getImage()).placeholder(R.drawable.ic_list_placeholder_image).into(imageView);
 
         nameTextView.setText(coin.getName());
         priceTextView.setText("$"+coin.getCurrentPrice());
@@ -91,23 +81,87 @@ public class GraphDetailsActivity extends AppCompatActivity {
         lowTextView.setText("$"+coin.getLow24h());
 
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch(tab.getPosition()){
+                    case 0:
+                        fetchData(1);
+                        break;
+                    case 1:
+                        fetchData(7);
+                        break;
+                    case 2:
+                        fetchData(14);
+                        break;
+                    case 3:
+                        fetchData(30);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        tabLayout.addTab(tabLayout.newTab().setText("1D"));
+        tabLayout.addTab(tabLayout.newTab().setText("7D"));
+        tabLayout.addTab(tabLayout.newTab().setText("14D"));
+        tabLayout.addTab(tabLayout.newTab().setText("30D"));
+
+
+
     }
 
-    public void renderGraph(CoinChartData coinChartData) {
-        XYSeries priceSeries = new XYSeries("Price",0);
-        XYSeries volumeSeries = new XYSeries("Volume",1);
+
+
+    private void fetchData(final int number_of_days){
+
+
+        CoinService coinService = RetrofitInstance.getRetrofitInstance().create(CoinService.class);
+        Call<CoinChartData> coinApiCall = coinService.getCoinChartData(coin.getId(), "usd", number_of_days, "hourly");
+        coinApiCall.enqueue(new Callback<CoinChartData>() {
+            @Override
+            public void onResponse(Call<CoinChartData> call, Response<CoinChartData> response) {
+                progressBar_cyclic.setVisibility(View.VISIBLE);
+                setupGraph(response.body(),number_of_days);
+                progressBar_cyclic.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<CoinChartData> call, Throwable t) {
+                t.printStackTrace();
+                Toast toast = Toast.makeText(getApplicationContext(), "Connection timeout. Please try again", Toast.LENGTH_LONG);
+                toast.show();
+            }
+
+        });
+
+    }
+
+
+
+    private void setupGraph(CoinChartData coinChartData, int number_of_days) {
+        XYSeries priceSeries = new XYSeries("Price");
+        XYSeries volumeSeries = new XYSeries("Volume");
 
 
 
 
-        for (int i = 0; i < coinChartData.getPrices().size(); i=i+2 ) {
+        for (int i = 0; i < coinChartData.getPrices().size(); i=i+1 ) {
             priceSeries.add(i+1 , Double.parseDouble(coinChartData.getPrices().get(i).get(1)));
 
-            volumeSeries.add(i +1, Double.parseDouble( coinChartData.getTotalVolumes().get(i).get(1).substring(0,5)));
+            volumeSeries.add(i +1, Double.parseDouble( coinChartData.getTotalVolumes().get(i).get(1)));
         }
 
         XYSeriesRenderer lineRenderer = new XYSeriesRenderer();
-
         lineRenderer.setColor(Color.RED);
         lineRenderer.setDisplayBoundingPoints(true);
         lineRenderer.setPointStyle(PointStyle.CIRCLE);
@@ -116,7 +170,7 @@ public class GraphDetailsActivity extends AppCompatActivity {
         lineRenderer.setShowLegendItem(false);
 
         XYSeriesRenderer barRenderer = new XYSeriesRenderer();
-        barRenderer.setColor(R.color.colorPrimaryDark);
+        barRenderer.setColor(R.color.dimTextColor2);
         barRenderer.setDisplayBoundingPoints(true);
         barRenderer.setPointStrokeWidth(1);
         barRenderer.setLineWidth(1f);
@@ -124,38 +178,57 @@ public class GraphDetailsActivity extends AppCompatActivity {
 
         XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
         dataset.addSeries(priceSeries);
-        dataset.addSeries(volumeSeries);
+        XYMultipleSeriesDataset dataset1 = new XYMultipleSeriesDataset();
+        dataset1.addSeries(volumeSeries);
 
-        XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer(2);
+        XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
         mRenderer.addSeriesRenderer(lineRenderer);
-        mRenderer.addSeriesRenderer(barRenderer);
-        mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent margins
-        mRenderer.setLabelsTextSize(35);
-        mRenderer.setYLabels(8);
 
+        mRenderer.setMarginsColor(android.R.color.transparent); // transparent margins
+        mRenderer.setLabelsTextSize(50);
+        mRenderer.setYLabels(8);
         mRenderer.setXLabels(number_of_days);
         mRenderer.setLabelsColor(android.R.color.transparent);
         mRenderer.setBarSpacing(1.2);
 
+
         mRenderer.setYAxisAlign(Paint.Align.LEFT,0);
-        mRenderer.setYAxisAlign(Paint.Align.RIGHT,1);
         mRenderer.setYLabelsAlign(Paint.Align.LEFT,0);
-        mRenderer.setYLabelsAlign(Paint.Align.LEFT,1);
 
 
         mRenderer.setYLabelsPadding(1);
         mRenderer.setPanEnabled(false, false);
         mRenderer.setDisplayValues(true);
+        mRenderer.setShowAxes(false);
+        mRenderer.setShowLabels(false,true);
         mRenderer.setShowGrid(true);
         mRenderer.setShowLegend(false);
 
+        XYMultipleSeriesRenderer mRenderer1 = new XYMultipleSeriesRenderer();
+        mRenderer1.addSeriesRenderer(barRenderer);
 
+        mRenderer1.setMarginsColor(android.R.color.transparent);
+        mRenderer1.setLabelsColor(android.R.color.transparent);
 
-        CombinedXYChart.XYCombinedChartDef[] types = new CombinedXYChart.XYCombinedChartDef[] { new CombinedXYChart.XYCombinedChartDef(LineChart.TYPE, 0), new CombinedXYChart.XYCombinedChartDef(BarChart.TYPE, 1) };
+        mRenderer1.setBarSpacing(1.2);
+        mRenderer1.setYLabelsPadding(1);
+        mRenderer1.setPanEnabled(false, false);
+        mRenderer1.setDisplayValues(false);
+        mRenderer1.setShowLabels(false);
+        mRenderer1.setShowAxes(false);
+        mRenderer1.setShowGrid(false);
+        mRenderer1.setShowLegend(false);
 
-        GraphicalView chartView = ChartFactory.getCombinedXYChartView(this,dataset,mRenderer,types);
+        if (priceChart.getChildCount() != 1 && volumeChart.getChildCount() != 0) {
+            priceChart.removeViewAt(1);
+            volumeChart.removeViewAt(0);
+        }
 
-        chartLyt.addView(chartView,0);
+        GraphicalView chartView = ChartFactory.getLineChartView(this,dataset,mRenderer);
+        priceChart.addView(chartView);
+        chartView = ChartFactory.getBarChartView(this,dataset1,mRenderer1,BarChart.Type.DEFAULT);
+        volumeChart.addView(chartView);
+
     }
 
 
